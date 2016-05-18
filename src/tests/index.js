@@ -64,7 +64,7 @@ function * primeGenerator() {
     const nextSlot = check + (((i + check) & 1) ? i : i + i);
           candidate = queue[nextSlot];
 
-    if (candidate) reinsert(i, queue, check + i); // will eventually stack overflow unless optimized out...?
+    if (candidate) reinsert(i, queue, check + i); // will eventually overflow stack unless your optimizer doesn't eliminate the fn call...and why wouldn't it?...?
     else queue[nextSlot] = i;
 
     return check;
