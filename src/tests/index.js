@@ -26,30 +26,52 @@ function nextPrime(lastPrime, queue) {
 function * primeGenerator() {
   yield 1;
   yield 2;
-  yield 3;
 
   let lastPrime = 3,
       check = lastPrime;
 
-  const queue = [];
+  const queue = {};
 
   while (true) {
-    check = check + 2;
-
     const factors = queue[check];
 
-    if (factors !== undefined) {
-      factors.forEach(requeue);
-    }
+// console.log('check', check, 'factors', factors);
+    if (factors !== undefined) requeue(factors, queue, check);
+    /*jshint -W093 */
     else {
-      lastPrime = check;
-      yield lastPrime;
+      const nextCheck = !((check + check) & 1) ? check + check + check : check + check;
+      (queue[nextCheck] = queue[nextCheck] || []).push(check);
+
+      // console.log({nextCheck, queue});
+      yield lastPrime = check;
     }
+
+    check = check + 2;
+    // if (factors !== undefined) {
+    //   factors.forEach(requeue);
+    // }
+    // else {
+    //   lastPrime = check;
+    //   yield lastPrime;
+    // }
   }
 
-  function requeue(factor) {
-    (queue[check + factor] = queue[check + factor] || []).push(factor);
+  function requeue(factors, queue, check) {
+    for (let i = 0; i < factors.length; i++) {
+      const factor = factors[i];
+      const nextCheck = !((check + factor) & 1) ? check + factor + factor : check + factor;
+      // could check if a multiple of any queued items...or something?
+      (queue[nextCheck] = queue[nextCheck] || []).push(check);
+
+
+      // (queue[check + factors[i]] = queue[check + factors[i]] || []).push(factors[i]);
+    }
+    delete queue[check];
   }
+
+  // function requeue(factor) {
+  //   (queue[check + factor] = queue[check + factor] || []).push(factor);
+  // }
 }
 
 const generator = primeGenerator();
