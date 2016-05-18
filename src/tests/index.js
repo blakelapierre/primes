@@ -54,15 +54,17 @@ function * primeGenerator() {
 
 const generator = primeGenerator();
 
-let logLevel = 1;
+let logLevel = 1,
+    threshold = Math.pow(10, logLevel);
 while (true) {
   const result = generator.next().value;
 
   console.log(result);
 
-  if (result > Math.pow(10, logLevel)) {
+  if (result > threshold) {
     console.error('passed level', logLevel, 'at', result);
     logLevel++;
+    threshold = Math.pow(10, logLevel);
   }
 }
 
