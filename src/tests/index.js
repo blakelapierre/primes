@@ -35,25 +35,16 @@ function * primeGenerator() {
   while (true) {
     const factors = queue[check];
 
-// console.log('check', check, 'factors', factors);
     if (factors !== undefined) requeue(factors, queue, check);
     /*jshint -W093 */
     else {
       const nextCheck = !((check + check) & 1) ? check + check + check : check + check;
       (queue[nextCheck] = queue[nextCheck] || []).push(check);
 
-      // console.log({nextCheck, queue});
       yield lastPrime = check;
     }
 
     check = check + 2;
-    // if (factors !== undefined) {
-    //   factors.forEach(requeue);
-    // }
-    // else {
-    //   lastPrime = check;
-    //   yield lastPrime;
-    // }
   }
 
   function requeue(factors, queue, check) {
@@ -62,16 +53,9 @@ function * primeGenerator() {
       const nextCheck = !((check + factor) & 1) ? check + factor + factor : check + factor;
       // could check if a multiple of any queued items...or something?
       (queue[nextCheck] = queue[nextCheck] || []).push(check);
-
-
-      // (queue[check + factors[i]] = queue[check + factors[i]] || []).push(factors[i]);
     }
     delete queue[check];
   }
-
-  // function requeue(factor) {
-  //   (queue[check + factor] = queue[check + factor] || []).push(factor);
-  // }
 }
 
 const generator = primeGenerator();
